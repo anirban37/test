@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<mule xmlns:mulexml="http://www.mulesoft.org/schema/mule/xml"
+       xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
+       xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:vm="http://www.mulesoft.org/schema/mule/vm" xmlns:context="http://www.springframework.org/schema/context" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+       xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.mulesoft.org/schema/mule/xml http://www.mulesoft.org/schema/mule/xml/current/mule-xml.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-current.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
+   
+ <!-- <?xml version="1.0" encoding="UTF-8"?>
+ 
+<RootTag xmlns="http://www.axyz.com/schemas">
+    <MainData >
+        <User>
+          <UserId>Test123</UserId>
+         <UserName>Anirban</UserName>
+         </User>
+    </MainData>
+</RootTag>
+  -->
+<!--  or -->
+ 
+<!-- <?xml version="1.0" encoding="UTF-8"?>
+ 
+<RootTag xmlns="http://www.efg.com/schemas">
+    <MainData >
+        <User>
+          <UserId>Test123</UserId>
+         <UserName>Anirban</UserName>
+         </User>
+    </MainData>
+</RootTag> -->
+ 
+ 
+  <http:listener-config name="HTTP_Listener_Configuration" host="0.0.0.0" port="7393" doc:name="HTTP Listener Configuration"/>
+  
+  <mulexml:namespace-manager includeConfigNamespaces="false">
+    <mulexml:namespace prefix="w1" uri="http://www.axyz.com/schemas" />
+    <mulexml:namespace prefix="w2" uri="http://www.efg.com/schemas" />
+  </mulexml:namespace-manager>
+  
+    <flow name="testFlow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/account" doc:name="HTTP"/>
+        <logger level="INFO" doc:name="Logger" message="UserId #[xpath3('/*:RootTag/*:MainData/*:User/*:UserId',payload,'STRING')]"/>
+        <logger level="INFO" doc:name="Logger" message="UserName #[xpath3('/*:RootTag/*:MainData/*:User/*:UserName',payload,'STRING')]"/>
+    </flow>
+    
+</mule>
