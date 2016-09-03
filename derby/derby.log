@@ -1,0 +1,10 @@
+----------------------------------------------------------------
+Sat Jun 04 13:15:41 IST 2016:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.8.1.2 - (1095077): instance a816c00e-0155-1a5f-e960-00001344f220 
+on database directory memory:F:\MuleWorkspace3.7\derby\SOAFiap  with class loader org.mule.module.launcher.MuleApplicationClassLoader[derby]@54dde531 
+Loaded from file:/F:/MuleWorkspace3.7/.mule/apps/derby/lib/derby-10.8.1.2.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.7.0_25-b17
+user.dir=F:\MuleWorkspace3.7\derby
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+<spring:beans>
+         <spring:bean id="Derby_Data_Source" class="org.enhydra.jdbc.standard.StandardXADataSource" >
+             <spring:property name="driverName" value="org.apache.derby.jdbc.EmbeddedDriver"/>
+             <!--  <spring:property name="url" value="jdbc:derby:SOAFiap;create=true"/>   -->
+           <spring:property name="url" value="jdbc:derby:memory:SOAFiap;create=true"/>  <!-- Create Database in memory -->
+         </spring:bean>
+ </spring:beans>
+ <db:generic-config name="Generic_Database_Configuration" dataSource-ref="Derby_Data_Source" doc:name="Generic Database Configuration"/>
+ <http:listener-config name="HTTP_Listener_Configuration" host="0.0.0.0" port="8081" doc:name="HTTP Listener Configuration"/>
+
+     <flow name="DerbyDBFlow1" >
+          <http:listener config-ref="HTTP_Listener_Configuration" path="/" doc:name="HTTP"/>
+          <logger message="Connection status: #[app.registry.Derby_Data_Source.getConnection().isClosed() ? 'Down' : 'Up'] " level="INFO" doc:name="Logger"/>
+          <db:execute-ddl config-ref="Generic_Database_Configuration" doc:name="Database">
+            <db:dynamic-query><![CDATA[CREATE TABLE FIAP.ALUNO
+(
+CODIGO int,
+NOME_ALUNO varchar(255)
+
+)]]></db:dynamic-query>
+        </db:execute-ddl>
+         <db:insert config-ref="Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[INSERT INTO FIAP.ALUNO (CODIGO, NOME_ALUNO) 
+VALUES (5, 'Igor Koba')]]></db:parameterized-query>
+          </db:insert>
+        <db:select config-ref="Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[select * from FIAP.ALUNO]]></db:parameterized-query>
+        </db:select>
+        
+         <logger message="#[message.payload]" level="INFO" doc:name="Logger"/>
+       
+     </flow></mule>
